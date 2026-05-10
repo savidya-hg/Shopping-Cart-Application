@@ -26,6 +26,7 @@ const styles = {
     nav: { display: 'flex', justifyContent: 'space-between', padding: '1rem', background: '#2ecc71', color: '#fff', alignItems: 'center', flexWrap: 'wrap' },
     logo: { fontSize: '1.5rem', fontWeight: 'bold' },
     catBtn: { background: 'none', border: 'none', color: 'white', margin: '0 10px', cursor: 'pointer', fontSize: '1rem' },
+    cartIcon: { cursor: 'pointer', position: 'relative', fontSize: '1.2rem' },
     badge: { background: 'red', borderRadius: '50%', padding: '2px 6px', fontSize: '0.8rem' }
 };
 
