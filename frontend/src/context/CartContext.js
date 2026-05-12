@@ -24,10 +24,14 @@ export const CartProvider = ({ children }) => {
         });
     };
 
-    const updateQuantity = (id, amount) => {
-        setCartItems(prev => 
-            prev.map(item => 
-                item._id === id ? { ...item, quantity: Math.max(1, item.quantity + amount) } : item
+    const updateQuantity = (productId, newQty) => {
+        if (newQty < 1) return; // Prevent 0 or negative quantities
+
+        setCartItems(prevItems => 
+            prevItems.map(item => 
+                item._id === productId 
+                    ? { ...item, quantity: parseInt(newQty) } // Force integer
+                    : item
             )
         );
     };
