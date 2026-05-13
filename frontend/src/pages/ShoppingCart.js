@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 
-const ShoppingCart = ({ isOpen, onClose }) => {
+const ShoppingCart = ({ isOpen, onClose, onProceedToCheckout }) => {
     const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext);
     const total = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
@@ -49,7 +49,12 @@ const ShoppingCart = ({ isOpen, onClose }) => {
                         <span>Grand Total:</span>
                         <span>{total.toFixed(2)} LKR</span>
                     </div>
-                    <button style={styles.checkoutBtn}>Proceed to Checkout</button>
+                    <button 
+                        style={styles.checkoutBtn} 
+                        onClick={onProceedToCheckout}
+                    >
+                        Proceed to Checkout
+                    </button>
                 </div>
             </div>
         </div>
