@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Login = () => {
     const [isRegister, setIsRegister] = useState(false);
@@ -9,18 +10,11 @@ const Login = () => {
         e.preventDefault();
         const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
         try {
-            // withCredentials ensures the cookie is stored in the browser
-            await axios.post(`http://localhost:5000${endpoint}`, formData, { withCredentials: true });
-            
-            if (isRegister) {
-                alert("Registration successful! Please login.");
-                setIsRegister(false);
-            } else {
-                // Refresh to trigger App.js useEffect check
-                window.location.reload();
-            }
+            // Updated to use dynamic API_URL
+            await axios.post(`${API_URL}${endpoint}`, formData, { withCredentials: true });
+            window.location.reload();
         } catch (err) { 
-            alert("Auth Failed: " + (err.response?.data?.message || "Something went wrong")); 
+            alert("Auth Failed: " + (err.response?.data?.message || "Error")); 
         }
     };
 
@@ -57,10 +51,10 @@ const Login = () => {
                 </form>
                 <div style={styles.divider}><span>OR</span></div>
                 <button 
-                    onClick={() => window.open("http://localhost:5000/api/auth/google", "_self")} 
+                    onClick={() => window.open(`${API_URL}/api/auth/google`, "_self")} 
                     style={styles.googleBtn}
                 >
-                    <i className="fab fa-google" style={{marginRight: '10px'}}></i> Continue with Google
+                    <i className="fab fa-google"></i> Continue with Google
                 </button>
                 <p style={styles.toggleText} onClick={() => setIsRegister(!isRegister)}>
                     {isRegister ? "Already have an account? Login" : "New here? Register"}

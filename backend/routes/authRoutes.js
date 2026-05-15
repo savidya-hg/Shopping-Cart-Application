@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const User = require('../models/User'); 
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
 // manual registration
 router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
@@ -59,7 +61,7 @@ router.post('/login', async (req, res) => {
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback', passport.authenticate('google'), (req, res) => {
-    res.redirect('http://localhost:3000');
+    res.redirect(FRONTEND_URL);
 });
 
 router.get('/current_user', (req, res) => {
@@ -68,7 +70,7 @@ router.get('/current_user', (req, res) => {
 
 router.get('/logout', (req, res) => {
     req.logout(() => {
-        res.redirect('http://localhost:3000');
+        res.redirect(FRONTEND_URL);
     });
 });
 
