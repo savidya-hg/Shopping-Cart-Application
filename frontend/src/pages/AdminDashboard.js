@@ -22,7 +22,7 @@ const AdminDashboard = ({ categories, refreshProducts }) => {
     }, [categories]);
 
     const fetchLocalProducts = async () => {
-        const res = await axios.get('http://localhost:5000/api/products');
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`, { withCredentials: true });
         setProducts(res.data);
         refreshProducts(); 
     };
@@ -55,7 +55,7 @@ const AdminDashboard = ({ categories, refreshProducts }) => {
     const handleAddProduct = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/products', newProductData);
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/products`, newProductData, { withCredentials: true });
             setNewProductData({ name: '', price: '', category: 'Vegetables', image: '', description: '' });
             fetchLocalProducts(); // refreshes everything
         } catch (err) { console.error("Error adding product", err); }
@@ -63,7 +63,7 @@ const AdminDashboard = ({ categories, refreshProducts }) => {
 
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure?")) {
-            await axios.delete(`http://localhost:5000/api/products/${id}`);
+            await axios.delete(`${process.env.REACT_APP_API_URL}/api/products/${id}`, { withCredentials: true });
             fetchLocalProducts();
         }
     };
@@ -73,7 +73,7 @@ const AdminDashboard = ({ categories, refreshProducts }) => {
     const handleEditChange = (e) => setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
 
     const handleSaveUpdate = async () => {
-        await axios.put(`http://localhost:5000/api/products/${editingId}`, editFormData);
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/products/${editingId}`, editFormData, { withCredentials: true });
         setEditingId(null);
         fetchLocalProducts();
     };

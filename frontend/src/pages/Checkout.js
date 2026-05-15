@@ -17,7 +17,7 @@ const Checkout = ({ cart, total, user, onBack, onClearCart }) => {
 
         try {
             // calls orderRoute.js endpoint to save the data
-            await axios.post('http://localhost:5000/api/orders', orderData);
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/orders`, orderData, { withCredentials: true });
             alert("Order placed successfully!");
             onClearCart();
             onBack(); 

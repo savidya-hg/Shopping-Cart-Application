@@ -13,14 +13,14 @@ function App() {
   const [view, setView] = useState('shop');
 
   const fetchProducts = () => {
-    axios.get('http://localhost:5000/api/products')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/products`, { withCredentials: true })
       .then(res => setProducts(res.data))
       .catch(err => console.log("Error fetching products:", err));
   };
 
   // Check Auth
   useEffect(() => {
-    axios.get('http://localhost:5000/api/auth/current_user', { withCredentials: true })
+    axios.get(`${process.env.REACT_APP_API_URL}/api/auth/current_user`, { withCredentials: true })
       .then(res => { if (res.data) setUser(res.data); })
       .catch(() => setUser(null));
   }, []);
@@ -30,7 +30,7 @@ function App() {
   }, []);
 
   const handleLogout = () => {
-    window.open("http://localhost:5000/api/auth/logout", "_self");
+    window.open(`${process.env.REACT_APP_API_URL}/api/auth/logout`, "_self");
   };
 
   const filteredProducts = products.filter(p => {
