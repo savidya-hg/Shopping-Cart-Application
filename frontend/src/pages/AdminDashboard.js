@@ -10,7 +10,6 @@ const AdminDashboard = ({ categories, refreshProducts }) => {
     const [adminSearch, setAdminSearch] = useState('');
     const [adminCategory, setAdminCategory] = useState('All');
 
-    // Internal list to show newly prompted category before it exists in the DB
     const [localCategories, setLocalCategories] = useState([]);
 
     useEffect(() => {
@@ -58,7 +57,7 @@ const AdminDashboard = ({ categories, refreshProducts }) => {
         try {
             await axios.post('http://localhost:5000/api/products', newProductData);
             setNewProductData({ name: '', price: '', category: 'Vegetables', image: '', description: '' });
-            fetchLocalProducts(); // This refreshes everything
+            fetchLocalProducts(); // refreshes everything
         } catch (err) { console.error("Error adding product", err); }
     };
 
@@ -103,7 +102,7 @@ const AdminDashboard = ({ categories, refreshProducts }) => {
                     {localCategories.filter(c => c !== 'All').map(c => (
                         <option key={c} value={c}>{c}</option>
                     ))}
-                    <option value="ADD_NEW" style={{color: 'green', fontWeight: 'bold'}}>+ Add New Category</option>
+                    <option value="ADD_NEW" style={{color: 'green'}}>+ Add New Category</option>
                 </select>
 
                 <input name="image" placeholder="Image URL" style={styles.input} value={newProductData.image} onChange={(e) => setNewProductData({...newProductData, image: e.target.value})} required />
@@ -124,7 +123,6 @@ const AdminDashboard = ({ categories, refreshProducts }) => {
                         value={adminCategory}
                         onChange={(e) => setAdminCategory(e.target.value)}
                     >
-                        {/* The Filter dropdown also uses the dynamic list */}
                         {localCategories.map(c => (
                             <option key={c} value={c}>{c}</option>
                         ))}

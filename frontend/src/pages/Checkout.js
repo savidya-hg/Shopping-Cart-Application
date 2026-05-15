@@ -31,11 +31,10 @@ const Checkout = ({ cart, total, user, onBack, onClearCart }) => {
         <div style={styles.overlay}>
             <div style={styles.billCard}>
                 <div style={styles.headerArea}>
-                    <h2 style={styles.brandTitle}>Green Grocery</h2>
+                    <h2 style={styles.brandTitle}><i className="fas fa-leaf"></i> Green Grocery</h2>
                     <p style={styles.subHeader}>Official Receipt</p>
                 </div>
 
-                {/* Bill Header */}
                 <div style={styles.billHeader}>
                     <span style={styles.colProduct}>Product</span>
                     <span style={styles.colQty}>Qty</span>

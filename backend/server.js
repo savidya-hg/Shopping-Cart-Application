@@ -1,4 +1,3 @@
-// 1. ALWAYS LOAD DOTENV FIRST
 require('dotenv').config(); 
 
 const express = require('express');
@@ -7,7 +6,6 @@ const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session');
 
-// 2. NOW REQUIRE CONFIGS (After env vars are loaded)
 require('./config/passport');
 
 const productRoutes = require('./routes/productRoutes');
@@ -18,9 +16,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:3000",
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"]
 }));
 
 // Session Middleware
@@ -48,6 +46,6 @@ app.get('/', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("Atlas Connected"))
+  .catch(err => console.log(err));

@@ -48,7 +48,7 @@ const Home = ({
             />
         ) : (
           user.role === 'admin' ? (
-            /* pass categories and fetch products here */
+
             <AdminDashboard 
                 categories={dynamicCategories} 
                 refreshProducts={fetchProducts} 

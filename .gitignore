@@ -1,9 +1,9 @@
-# Dependency folders (The biggest source of clutter)
+# Dependency folders
 node_modules/
 frontend/node_modules/
 backend/node_modules/
 
-# Environment secrets (Should never be uploaded)
+# Environment secrets
 .env
 
 # Build folders

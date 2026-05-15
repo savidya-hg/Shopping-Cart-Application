@@ -10,7 +10,7 @@ passport.deserializeUser((id, done) => {
     User.findById(id).then(user => done(null, user));
 });
 
-// Google Strategy Only
+// Google OAuth
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -24,7 +24,7 @@ passport.use(new GoogleStrategy({
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
-            role: 'user' // Default role
+            role: 'user' // Default role for new users
         }).save();
         done(null, newUser);
     } catch (err) {

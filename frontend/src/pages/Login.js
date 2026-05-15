@@ -9,14 +9,14 @@ const Login = () => {
         e.preventDefault();
         const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
         try {
-            // CRITICAL: withCredentials ensures the cookie is stored in the browser
+            // withCredentials ensures the cookie is stored in the browser
             await axios.post(`http://localhost:5000${endpoint}`, formData, { withCredentials: true });
             
             if (isRegister) {
                 alert("Registration successful! Please login.");
                 setIsRegister(false);
             } else {
-                // Refresh to trigger the App.js useEffect check
+                // Refresh to trigger App.js useEffect check
                 window.location.reload();
             }
         } catch (err) { 

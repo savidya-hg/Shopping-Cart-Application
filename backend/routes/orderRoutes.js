@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Get all orders (for Admin)
+// Get all orders (Admin)
 router.get('/', async (req, res) => {
     try {
         const orders = await Order.find().sort({ createdAt: -1 });

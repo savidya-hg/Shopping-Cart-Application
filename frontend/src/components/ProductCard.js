@@ -10,6 +10,7 @@ const ProductCard = ({ product }) => {
             <div style={styles.info}>
                 <h3 style={styles.name}>{product.name}</h3>
                 <p style={styles.category}>{product.category}</p>
+                <p style={styles.description}>{product.description}</p>
                 <p style={styles.price}>{product.price.toFixed(2)} LKR</p>
                 <button style={styles.btn} onClick={() => addToCart(product)}>
                     <i className="fas fa-cart-plus"></i> Add to Cart
@@ -25,6 +26,7 @@ const styles = {
     info: { padding: '15px' },
     name: { margin: '10px 0 5px', fontSize: '1.1rem' },
     category: { color: '#7f8c8d', fontSize: '0.85rem', marginBottom: '10px' },
+    description: { fontSize: '0.9rem', color: '#555', marginBottom: '15px' },
     price: { fontWeight: 'bold', color: '#27ae60', fontSize: '1.1rem', marginBottom: '15px' },
     btn: { background: '#27ae60', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '25px', cursor: 'pointer', fontWeight: 'bold' }
 };

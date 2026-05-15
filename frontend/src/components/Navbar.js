@@ -25,7 +25,6 @@ const Navbar = ({ user, categories, onLogout, onSearch, onCategoryChange, onOpen
                             onChange={e => onSearch(e.target.value)} 
                         />
                     </div>
-                    {/* Customer Category Select */}
                     <select style={styles.navSelect} onChange={e => onCategoryChange(e.target.value)}>
                         {categories.map(c => (
                             <option key={c} value={c}>{c}</option>

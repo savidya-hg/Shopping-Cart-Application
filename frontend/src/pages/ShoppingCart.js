@@ -30,7 +30,7 @@ const ShoppingCart = ({ isOpen, onClose, onProceedToCheckout }) => {
                                         <button onClick={() => updateQuantity(item._id, item.quantity + 1)}>+</button>
                                     </div>
                                     
-                                    {/* Display Total Price for this item specific to quantity */}
+                                    {/* Display Total Price for one item each */}
                                     <div style={styles.lineTotal}>
                                         Total: <strong>{(item.price * item.quantity).toFixed(2)} LKR</strong>
                                     </div>

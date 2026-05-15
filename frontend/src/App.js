@@ -12,7 +12,6 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [view, setView] = useState('shop');
 
-  // 1. DEFINE the function here
   const fetchProducts = () => {
     axios.get('http://localhost:5000/api/products')
       .then(res => setProducts(res.data))
@@ -26,7 +25,6 @@ function App() {
       .catch(() => setUser(null));
   }, []);
 
-  // 2. USE the function in useEffect
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -61,7 +59,7 @@ function App() {
         handleLogout={handleLogout}
         dynamicCategories={dynamicCategories}
         filteredProducts={filteredProducts}
-        fetchProducts={fetchProducts} // 3. NOW THIS IS DEFINED
+        fetchProducts={fetchProducts}
       />
     </CartProvider>
   );
