@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 require('./config/passport');
 
@@ -23,9 +24,18 @@ app.use(cors({
 
 // Session Middleware
 app.use(session({
-    secret: 'secret_key_123',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI, // Uses your Atlas connection
+        collectionName: 'sessions'
+    }),
+    cookie: {
+        secure: process.env.NODE_ENV === 'production', // true if using https
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    }
 }));
 
 app.use(passport.initialize());
@@ -49,3 +59,5 @@ const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Atlas Connected"))
   .catch(err => console.log(err));
+
+  module.exports = app;
