@@ -15,7 +15,10 @@ function App() {
   const fetchProducts = () => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/products`, { withCredentials: true })
       .then(res => setProducts(res.data))
-      .catch(err => console.log("Error fetching products:", err));
+      .catch(err => {
+        console.error("Error fetching products:", err);
+        setProducts([]);
+      });
   };
 
   // Check Auth
@@ -33,13 +36,13 @@ function App() {
     window.open(`${process.env.REACT_APP_API_URL}/api/auth/logout`, "_self");
   };
 
-  const filteredProducts = products.filter(p => {
+  const filteredProducts = Array.isArray(products) ? products.filter(p => {
     const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;  
-  });
+  }) : [];
 
-  const dynamicCategories = ['All', ...new Set(products.map(p => p.category))];
+  const dynamicCategories = Array.isArray(products) ? ['All', ...new Set(products.map(p => p.category))] : ['All'];
 
   if (!user) return <Login />;
 
