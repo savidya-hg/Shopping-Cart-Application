@@ -8,7 +8,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
+        const endpoint = isRegister ? '/auth/register' : '/auth/login';
         try {
             const res = await axios.post(`${API_URL}${endpoint}`, formData, { withCredentials: true });
         
@@ -55,7 +55,7 @@ const Login = () => {
                 </form>
                 <div style={styles.divider}><span>OR</span></div>
                 <button 
-                    onClick={() => window.open(`${API_URL}/api/auth/google`, "_self")} 
+                    onClick={() => window.open(`${API_URL}/auth/google`, "_self")} 
                     style={styles.googleBtn}
                 >
                     <i className="fab fa-google"></i> Continue with Google

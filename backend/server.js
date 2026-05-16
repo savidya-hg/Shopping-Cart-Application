@@ -48,7 +48,12 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI,
         collectionName: 'sessions',
-        touchAfter: 24 * 3600
+        touchAfter: 24 * 3600,
+        mongoOptions: {
+            tls: true,
+            tlsAllowInvalidCertificates: false,
+            serverSelectionTimeoutMS: 5000,
+        }
     }),
     cookie: {
         secure: true,
@@ -71,15 +76,21 @@ app.get('/', (req, res) => {
     res.send("Shopping Cart API is running...");
 });
 
-// Database Connection
+// Database Connection with proper SSL/TLS configuration
 mongoose.connect(process.env.MONGO_URI, {
     retryWrites: true,
     w: 'majority',
-    ssl: true,
-    authSource: 'admin'
+    tls: true,
+    tlsAllowInvalidCertificates: false,
+    tlsInsecure: false,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
 })
     .then(() => console.log("MongoDB connected successfully to Atlas"))
-    .catch(err => console.error("MongoDB connection error:", err));
+    .catch(err => {
+        console.error("MongoDB connection error:", err);
+        process.exit(1);
+    });
 
 // Local development engine configuration
 if (process.env.NODE_ENV !== 'production') {
