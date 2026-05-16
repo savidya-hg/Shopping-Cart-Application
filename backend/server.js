@@ -16,25 +16,27 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 app.use(express.json());
+
+// CORS Handling
 app.use(cors({
     origin: "https://shopping-cart-application-asv5.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"]
 }));
 
-// Session Middleware
+// Middleware
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI, // Atlas connection
+        mongoUrl: process.env.MONGO_URI,
         collectionName: 'sessions'
     }),
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // true if using https
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
+        secure: true,
+        sameSite: 'none', // cookie tracking
+        maxAge: 24 * 60 * 60 * 1000 
     }
 }));
 
@@ -46,20 +48,16 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/auth', authRoutes);
 
-// DB Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("MongoDB connected successfully"))
-    .catch(err => console.error("MongoDB connection error:", err));
-
 app.get('/', (req, res) => {
     res.send("Shopping Cart API is running...");
 });
 
-const PORT = process.env.PORT || 5000;
+// Database Connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("Atlas Connected"))
-  .catch(err => console.log(err));
+    .then(() => console.log("MongoDB connected successfully to Atlas"))
+    .catch(err => console.error("MongoDB connection error:", err));
 
+// Local development engine configuration
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

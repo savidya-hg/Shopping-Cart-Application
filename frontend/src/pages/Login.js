@@ -10,11 +10,15 @@ const Login = () => {
         e.preventDefault();
         const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
         try {
-            // Updated to use dynamic API_URL
-            await axios.post(`${API_URL}${endpoint}`, formData, { withCredentials: true });
-            window.location.reload();
-        } catch (err) { 
-            alert("Auth Failed: " + (err.response?.data?.message || "Error")); 
+            const res = await axios.post(`${API_URL}${endpoint}`, formData, { withCredentials: true });
+        
+            if (res.status === 200 || res.status === 201) {
+                alert(isRegister ? "Registration successful! You can now log in." : "Logged in successfully!");
+                window.location.reload();
+            }
+        }   catch (err) { 
+            console.error("Authentication Error Details:", err);
+            alert("Auth Failed: " + (err.response?.data?.message || "Check your console network logs")); 
         }
     };
 
