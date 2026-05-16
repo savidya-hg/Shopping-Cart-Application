@@ -15,18 +15,20 @@ const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
+// Body parsing middleware (before CORS)
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// CORS Handling
-const allowedOrigins = [
-    "https://shopping-cart-application-asv5.vercel.app",
-    "https://shopping-cart-application-mocha.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5000"
-];
-
+// CORS Handling - must be early in middleware chain
 app.use(cors({
     origin: function (origin, callback) {
+        const allowedOrigins = [
+            "https://shopping-cart-application-asv5.vercel.app",
+            "https://shopping-cart-application-mocha.vercel.app",
+            "http://localhost:3000",
+            "http://localhost:5000"
+        ];
+        
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -38,7 +40,7 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// Middleware
+// Session Middleware
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -49,11 +51,12 @@ app.use(session({
     }),
     cookie: {
         secure: true,
-        sameSite: 'none', // cookie tracking
+        sameSite: 'none',
         maxAge: 24 * 60 * 60 * 1000 
     }
 }));
 
+// Passport authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
