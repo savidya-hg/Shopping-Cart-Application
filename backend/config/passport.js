@@ -20,7 +20,7 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.NODE_ENV === 'production' 
-        ? "https://shopping-cart-application-asv5.vercel.app/api/auth/google/callback" 
+        ? "https://shopping-cart-application-mocha.vercel.app/api/auth/google/callback" 
         : "/api/auth/google/callback",
     proxy: true
 }, async (accessToken, refreshToken, profile, done) => {
