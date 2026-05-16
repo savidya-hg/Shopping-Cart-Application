@@ -47,11 +47,13 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI,
-        collectionName: 'sessions'
+        collectionName: 'sessions',
+        touchAfter: 24 * 3600
     }),
     cookie: {
         secure: true,
         sameSite: 'none',
+        httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000 
     }
 }));
@@ -70,7 +72,12 @@ app.get('/', (req, res) => {
 });
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+    retryWrites: true,
+    w: 'majority',
+    ssl: true,
+    authSource: 'admin'
+})
     .then(() => console.log("MongoDB connected successfully to Atlas"))
     .catch(err => console.error("MongoDB connection error:", err));
 

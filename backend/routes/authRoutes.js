@@ -79,12 +79,25 @@ router.get('/google/callback', passport.authenticate('google'), (req, res) => {
 });
 
 router.get('/current_user', (req, res) => {
-    res.send(req.user);
+    if (req.user) {
+        res.json(req.user);
+    } else {
+        res.status(401).json({ message: "Not authenticated" });
+    }
 });
 
 router.get('/logout', (req, res) => {
-    req.logout(() => {
-        res.redirect(FRONTEND_URL);
+    req.logout((err) => {
+        if (err) {
+            return res.status(500).json({ message: "Logout error" });
+        }
+        req.session.destroy((sessionErr) => {
+            if (sessionErr) {
+                return res.status(500).json({ message: "Session destroy error" });
+            }
+            res.clearCookie('connect.sid');
+            res.redirect(FRONTEND_URL);
+        });
     });
 });
 
