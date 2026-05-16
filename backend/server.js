@@ -18,10 +18,24 @@ const app = express();
 app.use(express.json());
 
 // CORS Handling
+const allowedOrigins = [
+    "https://shopping-cart-application-asv5.vercel.app",
+    "https://shopping-cart-application-mocha.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5000"
+];
+
 app.use(cors({
-    origin: "https://shopping-cart-application-asv5.vercel.app",
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"]
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // Middleware
