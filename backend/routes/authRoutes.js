@@ -43,8 +43,21 @@ router.post('/login', async (req, res) => {
             if (isMatch) {
                 // log the user in using passport session
                 req.login(user, (err) => {
-                    if (err) return res.status(500).json(err);
-                    return res.json(user);
+                    if (err) {
+                        console.error("Login error:", err);
+                        return res.status(500).json({ message: "Session error" });
+                    }
+                    // Ensure session is saved before responding
+                    req.session.save((err) => {
+                        if (err) {
+                            console.error("Session save error:", err);
+                            return res.status(500).json({ message: "Session save failed" });
+                        }
+                        return res.json({ 
+                            message: "Login successful", 
+                            user: { id: user._id, name: user.name, email: user.email, role: user.role }
+                        });
+                    });
                 });
             } else {
                 res.status(401).json({ message: "Invalid password" });
@@ -53,6 +66,7 @@ router.post('/login', async (req, res) => {
             res.status(401).json({ message: "User not found or uses Google Login" });
         }
     } catch (err) {
+        console.error("Login error:", err);
         res.status(500).json({ message: "Server error during login" });
     }
 });
