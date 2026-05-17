@@ -1,13 +1,21 @@
 {
   "version": 2,
-  "experimentalServices": {
-    "frontend": {
-      "buildCommand": "npm run build",
-      "mount": "/"
-    },
-    "backend": {
-      "buildCommand": "npm install",
-      "mount": "/api"
+  "buildCommand": "cd frontend && npm run build",
+  "outputDirectory": "frontend/build",
+  "functions": {
+    "backend/server.js": {
+      "memory": 1024,
+      "maxDuration": 60
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
