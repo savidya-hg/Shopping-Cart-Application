@@ -2,20 +2,12 @@
   "version": 2,
   "experimentalServices": {
     "frontend": {
-      "buildCommand": "npm run build"
+      "buildCommand": "npm run build",
+      "mount": "/"
     },
     "backend": {
-      "buildCommand": "npm install"
+      "buildCommand": "npm install",
+      "mount": "/api"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/backend/server.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+  }
 }
