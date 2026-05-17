@@ -62,10 +62,15 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
+// Routes - handle both /api prefix and no prefix (for Vercel rewrites)
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/auth', authRoutes);
+
+// Also handle without /api prefix (for Vercel serverless)
+app.use('/products', productRoutes);
+app.use('/orders', orderRoutes);
+app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
     res.send("Shopping Cart API is running...");
