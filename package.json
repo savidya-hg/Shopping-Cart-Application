@@ -1,0 +1,13 @@
+{
+  "name": "shopping-cart-application",
+  "version": "1.0.0",
+  "description": "Full-stack shopping cart application",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  }
+}
