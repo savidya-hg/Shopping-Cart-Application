@@ -6,6 +6,11 @@ const Login = () => {
     const [isRegister, setIsRegister] = useState(false);
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
 
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    const API_URL = process.env.NODE_ENV === 'production' 
+        ? API_BASE_URL 
+        : `${API_BASE_URL}/api`;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const endpoint = isRegister ? '/auth/register' : '/auth/login';
@@ -13,8 +18,16 @@ const Login = () => {
             const res = await axios.post(`${API_URL}${endpoint}`, formData, { withCredentials: true });
         
             if (res.status === 200 || res.status === 201) {
-                alert(isRegister ? "Registration successful! You can now log in." : "Logged in successfully!");
-                window.location.reload();
+                if (isRegister) {
+                    alert("Registration successful! You can now log in.");
+                    setFormData({ name: '', email: '', password: '' });
+                    setIsRegister(false);
+                } else {
+                    // Wait a moment for session to be fully established, then redirect
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 500);
+                }
             }
         }   catch (err) { 
             console.error("Authentication Error Details:", err);
@@ -29,23 +42,33 @@ const Login = () => {
                 <form onSubmit={handleSubmit} style={styles.form}>
                     {isRegister && (
                         <input 
+                            id="name"
+                            name="name"
+                            type="text"
                             placeholder="Full Name" 
                             style={styles.input} 
+                            value={formData.name}
                             onChange={e => setFormData({...formData, name: e.target.value})} 
                             required 
                         />
                     )}
                     <input 
+                        id="email"
+                        name="email"
                         type="email"
                         placeholder="Email" 
-                        style={styles.input} 
+                        style={styles.input}
+                        value={formData.email}
                         onChange={e => setFormData({...formData, email: e.target.value})} 
                         required 
                     />
                     <input 
+                        id="password"
+                        name="password"
                         type="password" 
                         placeholder="Password" 
-                        style={styles.input} 
+                        style={styles.input}
+                        value={formData.password}
                         onChange={e => setFormData({...formData, password: e.target.value})} 
                         required 
                     />

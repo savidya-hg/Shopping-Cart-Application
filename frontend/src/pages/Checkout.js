@@ -2,6 +2,10 @@ import React from 'react';
 import axios from 'axios';
 
 const Checkout = ({ cart, total, user, onBack, onClearCart }) => {
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    const API_URL = process.env.NODE_ENV === 'production' 
+        ? API_BASE_URL 
+        : `${API_BASE_URL}/api`;
     
     const handleCheckout = async () => {
         const orderData = {
@@ -17,7 +21,7 @@ const Checkout = ({ cart, total, user, onBack, onClearCart }) => {
 
         try {
             // calls orderRoute.js endpoint to save the data
-            await axios.post(`${process.env.REACT_APP_API_URL}/orders`, orderData, { withCredentials: true });
+            await axios.post(`${API_URL}/orders`, orderData, { withCredentials: true });
             alert("Order placed successfully!");
             onClearCart();
             onBack(); 

@@ -12,8 +12,12 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [view, setView] = useState('shop');
 
+  const API_URL = process.env.NODE_ENV === 'production' 
+    ? process.env.REACT_APP_API_URL 
+    : `${process.env.REACT_APP_API_URL}/api`;
+
   const fetchProducts = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/products`, { withCredentials: true })
+    axios.get(`${API_URL}/products`, { withCredentials: true })
       .then(res => setProducts(res.data))
       .catch(err => {
         console.error("Error fetching products:", err);
@@ -21,19 +25,25 @@ function App() {
       });
   };
 
-  // Check Auth
+  // Check Auth - runs once on mount
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/auth/current_user`, { withCredentials: true })
-      .then(res => { if (res.data) setUser(res.data); })
-      .catch(() => setUser(null));
-  }, []);
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+    axios.get(`${API_URL}/auth/current_user`, { withCredentials: true })
+      .then(res => { 
+        if (res.data && res.data._id) {
+          setUser(res.data);
+          fetchProducts();
+        } else {
+          setUser(null);
+        }
+      })
+      .catch(err => {
+        console.error("Auth check failed:", err.status);
+        setUser(null);
+      });
+  }, [API_URL]);
 
   const handleLogout = () => {
-    window.open(`${process.env.REACT_APP_API_URL}/auth/logout`, "_self");
+    window.open(`${API_URL}/auth/logout`, "_self");
   };
 
   const filteredProducts = Array.isArray(products) ? products.filter(p => {
