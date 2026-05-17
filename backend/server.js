@@ -62,15 +62,28 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes - handle both /api prefix and no prefix (for Vercel rewrites)
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/auth', authRoutes);
+// Middleware to strip /api prefix in production (Vercel rewrites)
+if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+        if (req.path.startsWith('/api/')) {
+            req.url = req.url.replace(/^\/api/, '');
+        }
+        next();
+    });
+}
 
-// Also handle without /api prefix (for Vercel serverless)
-app.use('/products', productRoutes);
-app.use('/orders', orderRoutes);
-app.use('/auth', authRoutes);
+// Routes - with /api prefix for local dev, stripped in production by middleware above
+if (process.env.NODE_ENV === 'production') {
+    // Production: routes accessed without /api (after middleware strips it)
+    app.use('/products', productRoutes);
+    app.use('/orders', orderRoutes);
+    app.use('/auth', authRoutes);
+} else {
+    // Development: routes accessed with /api prefix
+    app.use('/api/products', productRoutes);
+    app.use('/api/orders', orderRoutes);
+    app.use('/api/auth', authRoutes);
+}
 
 app.get('/', (req, res) => {
     res.send("Shopping Cart API is running...");
