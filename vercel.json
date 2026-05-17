@@ -2,12 +2,11 @@
   "version": 2,
   "experimentalServices": {
     "frontend": {
-      "rootDirectory": "frontend",
       "buildCommand": "npm run build",
       "outputDirectory": "build"
     },
     "backend": {
-      "rootDirectory": "backend"
+      "buildCommand": "npm install"
     }
   },
   "rewrites": [
