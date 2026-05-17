@@ -2,8 +2,7 @@
   "version": 2,
   "experimentalServices": {
     "frontend": {
-      "buildCommand": "npm run build",
-      "outputDirectory": "build"
+      "buildCommand": "npm run build"
     },
     "backend": {
       "buildCommand": "npm install"
