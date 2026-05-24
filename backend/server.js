@@ -17,6 +17,10 @@ const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
+if (isProduction) {
+    app.set('trust proxy', 1); // Trust Vercel's reverse proxy for secure cookies
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
