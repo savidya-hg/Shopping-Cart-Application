@@ -17,12 +17,13 @@ passport.deserializeUser(async (id, done) => {
 
 // Google OAuth
 const isProduction = process.env.NODE_ENV === 'production' && process.env.VERCEL === '1';
+const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://shopping-cart-application-shg.vercel.app';
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: isProduction 
-        ? "https://shopping-cart-application-mocha.vercel.app/api/auth/google/callback" 
+        ? `${vercelUrl}/api/auth/google/callback` 
         : "http://localhost:5000/api/auth/google/callback",
     proxy: true
 }, async (accessToken, refreshToken, profile, done) => {

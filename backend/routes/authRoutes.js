@@ -30,7 +30,11 @@ router.post('/register', async (req, res) => {
         res.status(201).json({ message: "User created successfully" });
     } catch (err) {
         console.error("Register Error:", err);
-        res.status(500).json({ message: "Server error during registration" });
+        res.status(500).json({ 
+            message: "Server error during registration", 
+            error: err.message, 
+            stack: err.stack 
+        });
     }
 });
 
@@ -47,13 +51,21 @@ router.post('/login', async (req, res) => {
                 req.login(user, (err) => {
                     if (err) {
                         console.error("Login error:", err);
-                        return res.status(500).json({ message: "Session error" });
+                        return res.status(500).json({ 
+                            message: "Session error", 
+                            error: err.message, 
+                            stack: err.stack 
+                        });
                     }
                     // Ensure session is saved before responding
                     req.session.save((err) => {
                         if (err) {
                             console.error("Session save error:", err);
-                            return res.status(500).json({ message: "Session save failed" });
+                            return res.status(500).json({ 
+                                message: "Session save failed", 
+                                error: err.message, 
+                                stack: err.stack 
+                            });
                         }
                         return res.json({ 
                             message: "Login successful", 
@@ -69,7 +81,11 @@ router.post('/login', async (req, res) => {
         }
     } catch (err) {
         console.error("Login error:", err);
-        res.status(500).json({ message: "Server error during login" });
+        res.status(500).json({ 
+            message: "Server error during login", 
+            error: err.message, 
+            stack: err.stack 
+        });
     }
 });
 
