@@ -5,6 +5,8 @@ backend/node_modules/
 
 # Environment secrets
 .env
+.env.development
+.env.production
 
 # Build folders
 frontend/build/
