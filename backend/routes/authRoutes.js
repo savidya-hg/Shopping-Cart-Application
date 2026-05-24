@@ -2,8 +2,10 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const User = require('../models/User'); 
-
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const isProduction = process.env.NODE_ENV === 'production' && process.env.VERCEL === '1';
+const FRONTEND_URL = isProduction 
+    ? (process.env.FRONTEND_URL || 'https://shopping-cart-application-asv5.vercel.app') 
+    : 'http://localhost:3000';
 
 // manual registration
 router.post('/register', async (req, res) => {

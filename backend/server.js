@@ -1,5 +1,7 @@
 require('dotenv').config(); 
 
+const isProduction = process.env.NODE_ENV === 'production' && process.env.VERCEL === '1';
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -15,20 +17,17 @@ const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
-// Body parsing middleware (before CORS)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS Handling - must be early in middleware chain
+// Updated CORS logic to include single unified monorepo domain
 app.use(cors({
     origin: function (origin, callback) {
         const allowedOrigins = [
-            "https://shopping-cart-application-asv5.vercel.app",
-            "https://shopping-cart-application-mocha.vercel.app",
+            "https://shopping-cart-application-shg.vercel.app",
             "http://localhost:3000",
             "http://localhost:5000"
         ];
-        
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -40,9 +39,8 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// Session Middleware
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'greengrocerysecretkey',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -51,57 +49,36 @@ app.use(session({
         touchAfter: 24 * 3600
     }),
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        secure: isProduction, // Use secure cookies only in production Vercel
+        sameSite: isProduction ? 'none' : 'lax', // Lax is perfect for localhost
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000 
     }
 }));
 
-// Passport authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Middleware to strip /api prefix in production (Vercel rewrites)
-if (process.env.NODE_ENV === 'production') {
-    app.use((req, res, next) => {
-        if (req.path.startsWith('/api/')) {
-            req.url = req.url.replace(/^\/api/, '');
-        }
-        next();
-    });
-}
-
-// Routes - with /api prefix for local dev, stripped in production by middleware above
-if (process.env.NODE_ENV === 'production') {
-    // Production: routes accessed without /api (after middleware strips it)
-    app.use('/products', productRoutes);
-    app.use('/orders', orderRoutes);
-    app.use('/auth', authRoutes);
-} else {
-    // Development: routes accessed with /api prefix
-    app.use('/api/products', productRoutes);
-    app.use('/api/orders', orderRoutes);
-    app.use('/api/auth', authRoutes);
-}
+// Unified Routing: Mount all routes behind /api for both local and production
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
     res.send("Shopping Cart API is running...");
 });
 
-// Database Connection
 mongoose.connect(process.env.MONGO_URI, {
     retryWrites: true,
     w: 'majority',
 })
-    .then(() => console.log("MongoDB connected successfully to Atlas"))
-    .catch(err => {
-        console.error("MongoDB connection error:", err);
-        process.exit(1);
-    });
+.then(() => console.log("MongoDB connected successfully to Atlas"))
+.catch(err => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+});
 
-// Local development engine configuration
-if (process.env.NODE_ENV !== 'production') {
+if (require.main === module) {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }

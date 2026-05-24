@@ -8,6 +8,12 @@
     "backend"
   ],
   "scripts": {
-    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "frontend": "npm start --workspace=frontend",
+    "backend": "npm start --workspace=backend",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
